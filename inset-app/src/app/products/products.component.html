@@ -1,0 +1,196 @@
+
+<div class="container mt-3">
+
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white">
+      <h4 class="mb-0">
+        <i class="bi bi-plus-circle"></i>
+        Ajouter un produit
+      </h4>
+    </div>
+
+    <div class="card-body">
+      <form #productForm="ngForm"
+            (ngSubmit)="addProduct()">
+
+        <div class="row g-3">
+
+          <div class="col-md-5">
+            <label class="form-label">Nom du produit</label>
+            <input
+              type="text"
+              class="form-control"
+              name="name"
+              [(ngModel)]="newProduct.name"
+              placeholder="Ex : Clavier mécanique"
+              required
+              maxlength="100">
+          </div>
+
+          <div class="col-md-3">
+            <label class="form-label">Prix (€)</label>
+            <input
+              type="number"
+              class="form-control"
+              name="price"
+              [(ngModel)]="newProduct.price"
+              min="0.01"
+              step="0.01"
+              required>
+          </div>
+
+          <div class="col-md-2">
+            <label class="form-label d-block">Statut</label>
+            <div class="form-check mt-2">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                id="selected"
+                name="selected"
+                [(ngModel)]="newProduct.selected">
+              <label class="form-check-label" for="selected">
+                Sélectionné
+              </label>
+            </div>
+          </div>
+
+          <div class="col-md-2 d-flex align-items-end">
+            <button
+              type="submit"
+              class="btn btn-success w-100"
+              [disabled]="productForm.invalid || isSubmitting">
+              <i class="bi bi-plus-lg"></i>
+              Ajouter
+            </button>
+          </div>
+
+        </div>
+      </form>
+    </div>
+  </div>
+
+  @if (successMessage) {
+    <div class="alert alert-success">
+      <i class="bi bi-check-circle"></i>
+      {{ successMessage }}
+    </div>
+  }
+
+  @if (errorMessage) {
+    <div class="alert alert-danger">
+      <i class="bi bi-exclamation-triangle"></i>
+      {{ errorMessage }}
+    </div>
+  }
+
+  <div class="card shadow-sm">
+
+    <div class="card-header bg-primary text-white">
+      <h4 class="mb-0">
+        <i class="bi bi-box-seam"></i>
+        Liste des Produits
+      </h4>
+    </div>
+
+    <div class="card-body">
+
+      <div class="mb-3">
+        <label class="form-label">
+          Rechercher un produit
+        </label>
+
+        <div class="input-group">
+          <span class="input-group-text">
+            <i class="bi bi-search"></i>
+          </span>
+
+          <input
+            type="text"
+            class="form-control"
+            name="search"
+            [(ngModel)]="searchTerm"
+            placeholder="Rechercher par nom...">
+        </div>
+      </div>
+
+      @if (products !== null) {
+
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+
+            <thead class="table-light">
+              <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Prix</th>
+                <th>Statut</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              @for (p of filteredProducts; track p.id) {
+                <tr>
+                  <td>{{ p.id }}</td>
+                  <td>{{ p.name }}</td>
+                  <td>{{ p.price | currency:'EUR' }}</td>
+
+                  <td>
+                    <button
+                      type="button"
+                      class="btn btn-sm p-0 border-0"
+                      (click)="toggleSelection(p)"
+                      [disabled]="busyProductIds.has(p.id)"
+                      [attr.aria-label]="'Changer le statut de ' + p.name">
+
+                      @if (p.selected) {
+                        <span class="badge bg-success">
+                          <i class="bi bi-check-circle-fill"></i>
+                          Sélectionné
+                        </span>
+                      } @else {
+                        <span class="badge bg-secondary">
+                          <i class="bi bi-circle"></i>
+                          Non sélectionné
+                        </span>
+                      }
+                    </button>
+                  </td>
+
+                  <td>
+                    <button
+                      class="btn btn-outline-danger btn-sm"
+                      (click)="handleDelete(p)"
+                      [disabled]="busyProductIds.has(p.id)">
+                      <i class="bi bi-trash"></i>
+                      Supprimer
+                    </button>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="5"
+                      class="text-center text-muted py-4">
+                    Aucun produit trouvé.
+                  </td>
+                </tr>
+              }
+            </tbody>
+
+          </table>
+        </div>
+
+        <div class="text-muted small">
+          {{ filteredProducts.length }} produit(s) affiché(s)
+        </div>
+
+      } @else {
+        <div class="alert alert-info">
+          Chargement du catalogue en cours...
+        </div>
+      }
+
+    </div>
+  </div>
+
+</div>

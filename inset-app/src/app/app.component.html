@@ -1,0 +1,36 @@
+
+<div class="container py-3">
+
+  <nav class="navbar navbar-expand navbar-light bg-light
+              p-3 mb-4 rounded shadow-sm">
+
+    <div class="container-fluid">
+
+      <a class="navbar-brand text-primary fw-bold"
+         routerLink="/home">
+        <i class="bi bi-box-seam"></i>
+        Angular 19 App
+      </a>
+
+      <div class="navbar-nav flex-row gap-2">
+
+        <button class="btn btn-outline-primary"
+                routerLink="/home">
+          <i class="bi bi-house-door"></i>
+          Home
+        </button>
+
+        <button class="btn btn-outline-primary"
+                routerLink="/products">
+          <i class="bi bi-box-seam"></i>
+          Products
+        </button>
+
+      </div>
+
+    </div>
+  </nav>
+
+  <router-outlet></router-outlet>
+
+</div>
